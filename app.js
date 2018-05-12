@@ -6,6 +6,7 @@ const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger');
 const session = require('koa-session2');
+const compress = require('koa-compress');
 
 const filter = require('./util/filter');
 
@@ -27,6 +28,9 @@ app.use(logger());
 app.use(require('koa-static')(__dirname + '/public'));
 app.use(session({
   key: 'elec'
+}));
+app.use(compress({
+  threshold: 2048
 }));
 // 处理跨域
 app.use(async function(ctx, next) {
