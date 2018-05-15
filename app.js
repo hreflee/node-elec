@@ -15,6 +15,7 @@ const BriefRouter = require('./api/routes/Brief');
 const BasicRouter = require('./api/routes/Basic');
 const LoadRouter = require('./api/routes/Load');
 const PowerCutRouter = require('./api/routes/PowerCut');
+const PredictRouter = require('./api/routes/Predict');
 
 // error handler
 onerror(app);
@@ -63,6 +64,7 @@ app.use(BriefRouter.routes(), BriefRouter.allowedMethods());
 app.use(BasicRouter.routes(), BasicRouter.allowedMethods());
 app.use(LoadRouter.routes(), LoadRouter.allowedMethods());
 app.use(PowerCutRouter.routes(), PowerCutRouter.allowedMethods());
+app.use(PredictRouter.routes(), PredictRouter.allowedMethods());
 
 // error-handling
 app.on('error', (err, ctx) => {

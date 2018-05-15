@@ -31,16 +31,4 @@ class ObjectKeyMap {
   }
 }
 
-let okm = new ObjectKeyMap();
-console.log(okm.get({a: 1}, {b: 2}));
-console.log(okm.all());
-let a1 = okm.get({a: 1}, {b: 2});
-a1.b = 100;
-console.log(okm.all());
-console.log(okm.get([1, 'b'], {b: 2}));
-console.log(okm.all());
-okm.forEach((key, value) => {
-  console.log(key, value);
-});
-
 module.exports = ObjectKeyMap;

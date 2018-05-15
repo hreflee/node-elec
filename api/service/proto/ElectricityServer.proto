@@ -1,0 +1,25 @@
+syntax = "proto3";
+
+package electricity;
+
+service PowerCutService {
+  rpc ValidArray (StationHistory) returns (ValidResult) {}
+}
+
+message StationHistory {
+  repeated StationHistoryItem historyArray = 1;
+}
+
+message StationHistoryItem {
+  string collectPointNo = 1;
+  map<string, float> historyItem = 2;
+}
+
+message ValidResult {
+  repeated ValidResultItem resultArray = 1;
+}
+
+message ValidResultItem {
+  string collectPointNo = 1;
+  map<string, float> resultItem = 2;
+}

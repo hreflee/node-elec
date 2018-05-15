@@ -1,6 +1,6 @@
 const Sequelize = require('sequelize');
 const md5 = require('md5');
-const connection = require('./dbConnection');
+const connection = require('./db-connection');
 const userConfig = require('../../config/database').defaultUser;
 const models = {
   user: connection.import('./define/user'),
