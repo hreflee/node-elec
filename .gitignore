@@ -4,4 +4,4 @@ dist/
 npm-debug.log
 .idea
 
-config/database.js
+config/secret-config.js

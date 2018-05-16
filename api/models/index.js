@@ -1,7 +1,7 @@
 const Sequelize = require('sequelize');
 const md5 = require('md5');
 const connection = require('./db-connection');
-const userConfig = require('../../config/database').defaultUser;
+const userConfig = require('../../config/secret-config').defaultUser;
 const models = {
   user: connection.import('./define/user'),
   client: connection.import('./define/client_props'),

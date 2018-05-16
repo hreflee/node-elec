@@ -6,6 +6,12 @@ module.exports = async (ctx, next) => {
   } else {
     if (ctx.session.user) {
       await next();
+    } else {
+      ctx.response.status = 401;
+      ctx.response.body = {
+        status: 0,
+        data: '请登录'
+      }
     }
   }
 };

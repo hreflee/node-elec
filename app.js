@@ -17,6 +17,8 @@ const LoadRouter = require('./api/routes/Load');
 const PowerCutRouter = require('./api/routes/PowerCut');
 const PredictRouter = require('./api/routes/Predict');
 
+require('./job').createJob();
+
 // error handler
 onerror(app);
 
