@@ -67,10 +67,25 @@ const getWeather = async function () {
             Object.keys(finalData).forEach(key => {
               finalData[key] = ((finalData[key] / 24) / 10).toFixed(1);
             });
-            await WeatherModel.create(Object.assign(finalData, {
-              station_id: stationId,
-              date
-            }));
+            let exit = WeatherModel.count({
+              where: {
+                station_id: stationId,
+                date
+              }
+            });
+            if (exit) {
+              await WeatherModel.update(finalData, {
+                where: {
+                  station_id: stationId,
+                  date
+                }
+              })
+            } else {
+              await WeatherModel.create(Object.assign(finalData, {
+                station_id: stationId,
+                date
+              }));
+            }
           }
         }
       } else {
