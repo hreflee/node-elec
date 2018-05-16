@@ -38,7 +38,9 @@ module.exports = {
     }
   },
   async logout (ctx) {
-    ctx.session.user = null;
-    ctx.response.status = 200;
+    ctx.session = null;
+    ctx.response.body = {
+      status: 1
+    };
   }
 };

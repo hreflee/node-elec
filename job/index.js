@@ -29,7 +29,7 @@ const getWeather = async function () {
     endDate = (new Moment()).subtract(1, 'days').startOf('day');
   }
   endDate.subtract(1, 'seconds');
-  let startDate = (new Moment(endDate)).subtract(3, 'days');
+  let startDate = (new Moment(endDate)).subtract(7, 'days');
   param.timeRange = `[${startDate.format('YYYYMMDDHHmmss')},${endDate.format('YYYYMMDDHHmmss')}]`;
   console.log('[job] query param:', QueryString.stringify(param));
   for (let i = 0; i < 1; i++) {
@@ -41,12 +41,14 @@ const getWeather = async function () {
         response.DS.forEach(responseItem => {
           map.get(Moment({
             year: responseItem.Year,
-            month: responseItem.Mon,
+            month: parseInt(responseItem.Mon) - 1,
             day: responseItem.Day
           }).format('YYYY-MM-DD'), []).push(responseItem);
         });
         map = map.all();
-        Object.keys(map).forEach(date => {
+        let dateArray = Object.keys(map);
+        for (let i = 0; i < dateArray.length; i++) {
+          let date = dateArray[i];
           if (map[date].length !== 24) {
             console.error('[job] data at', date, 'is not complete');
           } else {
@@ -65,12 +67,12 @@ const getWeather = async function () {
             Object.keys(finalData).forEach(key => {
               finalData[key] = ((finalData[key] / 24) / 10).toFixed(1);
             });
-            WeatherModel.create(Object.assign(finalData, {
+            await WeatherModel.create(Object.assign(finalData, {
               station_id: stationId,
               date
             }));
           }
-        })
+        }
       } else {
         console.log(response);
         throw Error('return code:' + response.returnCode);
@@ -80,7 +82,7 @@ const getWeather = async function () {
     }
   }
 };
-
+getWeather();
 module.exports = {
   createJob () {
     Schedule.scheduleJob('0 0 9 * * *', getWeather);

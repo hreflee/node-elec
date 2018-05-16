@@ -5,8 +5,11 @@ const json = require('koa-json');
 const onerror = require('koa-onerror');
 const bodyparser = require('koa-bodyparser');
 const logger = require('koa-logger');
-const session = require('koa-session2');
+const session = require('koa-session');
 const compress = require('koa-compress');
+
+const keys = require('./config/secret-config').keys;
+const sessionStore = require('./store/session-store');
 
 const filter = require('./util/filter');
 
@@ -29,21 +32,15 @@ app.use(bodyparser({
 app.use(json());
 app.use(logger());
 app.use(require('koa-static')(__dirname + '/public'));
+app.keys = keys;
 app.use(session({
-  key: 'elec'
-}));
+  key: 'elec',
+  maxAge: 86400000,
+  store: sessionStore
+}, app));
 app.use(compress({
   threshold: 2048
 }));
-// 处理跨域
-app.use(async function(ctx, next) {
-  ctx.set("Access-Control-Allow-Origin", ctx.request.header.origin)
-  ctx.set("Access-Control-Allow-Credentials", true);
-  ctx.set("Access-Control-Max-Age", 86400000);
-  ctx.set("Access-Control-Allow-Methods", "OPTIONS, GET, PUT, POST, DELETE");
-  ctx.set("Access-Control-Allow-Headers", "x-requested-with, accept, origin, content-type");
-  await next()
-});
 
 app.use(views(__dirname + '/views', {
   extension: 'pug'
