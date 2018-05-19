@@ -10,6 +10,7 @@ const ObjectKeyMap = require('../util/object-key-map');
 const cmaConfig = require('../config/secret-config').cmaConfig;
 
 const getWeather = async function () {
+  console.log('[job] call getWeather');
   let url = 'http://api.data.cma.cn:8090/api';
   let stationId = '57687'
   let param = {
@@ -32,7 +33,7 @@ const getWeather = async function () {
   let startDate = (new Moment(endDate)).subtract(7, 'days');
   param.timeRange = `[${startDate.format('YYYYMMDDHHmmss')},${endDate.format('YYYYMMDDHHmmss')}]`;
   console.log('[job] query param:', QueryString.stringify(param));
-  for (let i = 0; i < 1; i++) {
+  for (let i = 0; i < 5; i++) {
     try {
       let response = await Got(url + '?' + QueryString.stringify(param));
       response = JSON.parse(response.body);
@@ -67,7 +68,8 @@ const getWeather = async function () {
             Object.keys(finalData).forEach(key => {
               finalData[key] = ((finalData[key] / 24) / 10).toFixed(1);
             });
-            let exit = WeatherModel.count({
+            finalData.RHU = (finalData.RHU / 100).toFixed(2);
+            let exit = await WeatherModel.count({
               where: {
                 station_id: stationId,
                 date
@@ -97,9 +99,9 @@ const getWeather = async function () {
     }
   }
 };
-getWeather();
 module.exports = {
-  createJob () {
+  async createJob () {
     Schedule.scheduleJob('0 0 9 * * *', getWeather);
+    await getWeather();
   }
 }
